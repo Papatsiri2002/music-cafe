@@ -1,42 +1,26 @@
+// Dashboard.js
 import { useState, useEffect } from "react";
 import useAuth from "./useAuth";
 import Player from "./Player";
 import TrackSearchResult from "./TrackSearchResult";
 import { Container, Form } from "react-bootstrap";
 import SpotifyWebApi from "spotify-web-api-node";
-import axios from "axios";
+import "./dash.css";
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: "9b41f4aed92a45ed9572c61677cbf2b3",
+  clientId: "8786eb53cc564d9e8279554a6a844819",
 });
 
 export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [playingTrack, setPlayingTrack] = useState();
-  const [lyrics, setLyrics] = useState("");
+  const [playingTrack, setPlayingTrack] = useState("");
 
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch("");
-    setLyrics("");
   }
-
-  useEffect(() => {
-    if (!playingTrack) return;
-
-    axios
-      .get("http://localhost:3001/lyrics", {
-        params: {
-          track: playingTrack.title,
-          artist: playingTrack.artist,
-        },
-      })
-      .then((res) => {
-        setLyrics(res.data.lyrics);
-      });
-  }, [playingTrack]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -74,10 +58,14 @@ export default function Dashboard({ code }) {
   }, [search, accessToken]);
 
   return (
-    <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
+    <Container
+      className="search-custom d-flex flex-column"
+      style={{ height: "80vh" }}
+    >
       <Form.Control
+        className="search-bar-custom"
         type="search"
-        placeholder="Search Songs/Artists"
+        placeholder="Search Songs or Artists"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -90,8 +78,12 @@ export default function Dashboard({ code }) {
           />
         ))}
         {searchResults.length === 0 && (
-          <div className="text-center" style={{ whiteSpace: "pre" }}>
-            {lyrics}
+          <div className="img-custom text-center">
+            <img
+              src={process.env.PUBLIC_URL + "/painting.jpg"}
+              alt="painting"
+              style={{ maxWidth: "100%" }}
+            />
           </div>
         )}
       </div>

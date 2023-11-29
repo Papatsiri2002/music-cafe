@@ -10,7 +10,6 @@ export default function useAuth(code) {
     axios
       .post("http://localhost:3001/login", {
         code,
-        scope: "user-read-private user-read-email user-modify-playback-state", //add new scopes here
       })
       .then((res) => {
         setAccessToken(res.data.accessToken);

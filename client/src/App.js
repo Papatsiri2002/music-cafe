@@ -6,7 +6,14 @@ const code = new URLSearchParams(window.location.search).get("code");
 console.log("Code:", code);
 
 function App() {
-  return code ? <Dashboard code={code} /> : <Login />;
+  return (
+    <div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      {code ? <Dashboard code={code} /> : <Login />}
+    </div>
+  );
 }
 
 export default App;
